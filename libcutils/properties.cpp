@@ -112,6 +112,13 @@ int property_set(const char *key, const char *value) {
 }
 
 int property_get(const char *key, char *value, const char *default_value) {
+    if (strcmp(key, "ro.build.version.security_patch") == 0) {
+        char real_security_patch[PROPERTY_VALUE_MAX] = {'\0'};
+        char boot_completed[PROPERTY_VALUE_MAX] = {'\0'};
+        if (__system_property_get("ro.build.version.real_security_patch", real_security_patch) > 0 && __system_property_get("sys.boot_completed", boot_completed) == 0){
+            return real_security_patch; // Return reals security_patch
+        }
+    }
     int len = __system_property_get(key, value);
     if (len > 0) {
         return len;
